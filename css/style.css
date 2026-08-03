@@ -1,0 +1,277 @@
+/* ==========================================================================
+   HORIZON — surcouche app au-dessus de racine.css (thème paper)
+   ========================================================================== */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg);
+}
+
+body>header,
+body>main {
+    max-width: none;
+}
+
+body>header {
+    padding-block: var(--space-xs);
+}
+
+body>header h1 {
+    font-size: var(--font-size-base);
+}
+
+body>header .theme-switch {
+    width: auto;
+    margin-bottom: 0;
+}
+
+body>main {
+    padding-block: var(--space-base) var(--space-xl);
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* ── Barre d'action (ajout de tâche) ─────────────────────────────────── */
+.toolbar {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+    margin-bottom: var(--space-base);
+}
+
+.input-group {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    border: var(--border-width) solid var(--color-border);
+}
+
+.toolbar input[type="text"] {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-bottom: 0;
+    border-right: var(--border-width) solid var(--color-border-subtle);
+}
+
+.toolbar select {
+    flex: 0 0 auto;
+    width: auto;
+    margin-bottom: 0;
+}
+
+.toolbar button {
+    flex: 0 0 auto;
+}
+
+/* ── Board ───────────────────────────────────────────────────────────── */
+.board {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(220px, 1fr);
+    gap: var(--space-2xs);
+    overflow-x: auto;
+    padding-bottom: var(--space-xs);
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* Les colonnes sont des <section>, on neutralise le style "contenu long"
+   que racine.css applique par défaut à main section (bordure/marges 4xl). */
+.board section.column {
+    margin-block: 0;
+    padding-block: 0;
+    border-top: none;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background-color: var(--color-surface-1);
+    border: var(--border-width) solid var(--color-border-subtle);
+}
+
+.column-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: var(--border-width) solid var(--color-border-subtle);
+}
+
+.column-header h2 {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+}
+
+.column-header .count,
+.column-header .meta {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.column-header .meta-icon {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+/* ── Ajout inline dans une colonne ───────────────────────────────────── */
+.column-add {
+    padding: var(--space-2xs);
+    flex: 1 0 auto;
+}
+
+.column-add-btn {
+    width: 100%;
+    justify-content: flex-start;
+    text-transform: none;
+    font-weight: var(--font-weight-regular);
+    letter-spacing: normal;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.column:hover .column-add-btn,
+.column:focus-within .column-add-btn {
+    opacity: 1;
+}
+
+.column-add-btn[hidden] {
+    display: none;
+}
+
+.column-add-input {
+    margin-bottom: 0;
+    font-size: var(--font-size-sm);
+}
+
+/* Colonne vide : le bouton d'ajout remonte juste sous le header,
+   et le reste de la zone (vide) devient un grand raccourci cliquable. */
+.column:has(.task-list:empty) .column-add {
+    order: 0;
+    flex: 0 0 auto;
+}
+
+.column:has(.task-list:empty) .task-list {
+    order: 1;
+    flex: 1 1 auto;
+    cursor: pointer;
+}
+
+/* ── Liste de tâches ─────────────────────────────────────────────────── */
+.task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-2xs);
+    margin: 0;
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.task {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs) var(--space-xs);
+    margin-bottom: 0;
+    background-color: var(--color-surface-2);
+    border: var(--border-width) solid var(--color-border-subtle);
+}
+
+.task::before {
+    content: none;
+}
+
+.task-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    cursor: pointer;
+}
+
+.task-row input[type="checkbox"] {
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.task-row span {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--font-size-sm);
+}
+
+.task.done .task-row span {
+    color: var(--color-text-disabled);
+    text-decoration: line-through;
+}
+
+.task-note-indicator {
+    flex: 0 0 auto;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.task .btn.icon {
+    flex: 0 0 auto;
+    min-height: 1.75rem;
+    min-width: 1.75rem;
+    padding: 0;
+}
+
+/* ── Détails de tâche (notes markdown) ──────────────────────────────── */
+.task-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-top: var(--space-2xs);
+    border-top: var(--border-width) dashed var(--color-border-subtle);
+}
+
+.task-notes {
+    min-height: 4rem;
+    margin-bottom: 0;
+    font-size: var(--font-size-sm);
+}
+
+.task-preview {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    overflow-wrap: anywhere;
+    cursor: text;
+}
+
+.task-preview.empty {
+    font-style: italic;
+    color: var(--color-text-placeholder);
+}
+
+.task-preview code {
+    font-family: var(--font-mono);
+    background-color: var(--color-surface-3);
+    padding: 0 var(--space-3xs);
+}
+
+@media (max-width: 48rem) {
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .toolbar input[type="text"] {
+        flex-basis: 100%;
+    }
+}

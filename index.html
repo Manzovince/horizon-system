@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="paper-theme">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300..700;1,300..700&display=swap"
+        rel="stylesheet">
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Manzovince/Racine@main/racine.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Horizon system</h1>
+        <select class="theme-switch" aria-label="Thème">
+            <option value="light-theme">Light</option>
+            <option value="dark-theme">Dark</option>
+            <option value="paper-theme" selected>Paper</option>
+            <option value="forest-theme">Forest</option>
+            <option value="ocean-theme">Ocean</option>
+        </select>
+    </header>
+
+    <main>
+        <form id="task-form" class="toolbar">
+            <div class="input-group">
+                <input type="text" id="task-input" placeholder="Ajouter une tâche…" autocomplete="off" required>
+                <select id="task-column" aria-label="Colonne">
+                    <option value="today">Today</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="year">Year</option>
+                    <option value="someday">Someday</option>
+                </select>
+            </div>
+            <button type="submit" class="icon-start">
+                <iconify-icon icon="mdi:plus"></iconify-icon>
+                Ajouter
+            </button>
+        </form>
+
+        <div class="board">
+            <section class="column" data-column="today">
+                <header class="column-header">
+                    <h2>Today</h2>
+                    <span class="meta" data-meta="today"></span>
+                </header>
+                <ul class="task-list" data-list="today"></ul>
+                <div class="column-add">
+                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <form class="column-add-form" hidden>
+                        <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
+                    </form>
+                </div>
+            </section>
+
+            <section class="column" data-column="week">
+                <header class="column-header">
+                    <h2>Week</h2>
+                    <span class="meta" data-meta="week"></span>
+                </header>
+                <ul class="task-list" data-list="week"></ul>
+                <div class="column-add">
+                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <form class="column-add-form" hidden>
+                        <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
+                    </form>
+                </div>
+            </section>
+
+            <section class="column" data-column="month">
+                <header class="column-header">
+                    <h2>Month</h2>
+                    <span class="meta" data-meta="month"></span>
+                </header>
+                <ul class="task-list" data-list="month"></ul>
+                <div class="column-add">
+                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <form class="column-add-form" hidden>
+                        <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
+                    </form>
+                </div>
+            </section>
+
+            <section class="column" data-column="year">
+                <header class="column-header">
+                    <h2>Year</h2>
+                    <span class="meta" data-meta="year"></span>
+                </header>
+                <ul class="task-list" data-list="year"></ul>
+                <div class="column-add">
+                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <form class="column-add-form" hidden>
+                        <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
+                    </form>
+                </div>
+            </section>
+
+            <section class="column" data-column="someday">
+                <header class="column-header">
+                    <h2>Someday</h2>
+                    <iconify-icon class="meta-icon" icon="mdi:infinity"></iconify-icon>
+                </header>
+                <ul class="task-list" data-list="someday"></ul>
+                <div class="column-add">
+                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <form class="column-add-form" hidden>
+                        <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
