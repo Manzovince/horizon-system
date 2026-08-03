@@ -13,26 +13,11 @@ body {
     background-color: var(--color-bg);
 }
 
-body>header,
 body>main {
     max-width: none;
-}
-
-body>header {
-    padding-block: var(--space-xs);
-}
-
-body>header h1 {
-    font-size: var(--font-size-base);
-}
-
-body>header .theme-switch {
-    width: auto;
-    margin-bottom: 0;
-}
-
-body>main {
-    padding-block: var(--space-base) var(--space-xl);
+    padding-block: var(--space-xs) var(--space-sm);
+    padding-inline: var(--space-sm);
+    padding-bottom: 0;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -233,6 +218,16 @@ body>main {
     padding: 0;
 }
 
+.delete-btn {
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.task:hover .delete-btn,
+.task:focus-within .delete-btn {
+    opacity: 1;
+}
+
 /* ── Détails de tâche (notes markdown) ──────────────────────────────── */
 .task-details {
     display: flex;
@@ -243,7 +238,7 @@ body>main {
 }
 
 .task-notes {
-    min-height: 4rem;
+    min-height: 12rem;
     margin-bottom: 0;
     font-size: var(--font-size-sm);
 }
@@ -274,4 +269,38 @@ body>main {
     .toolbar input[type="text"] {
         flex-basis: 100%;
     }
+}
+
+/* ── Micro footer (copyright + thème) ───────────────────────────────── */
+.theme-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: none;
+    padding: var(--space-2xs) var(--space-sm);
+    margin-top: 0;
+    border-top: none;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+}
+
+.theme-footer:hover {
+    opacity: 1;
+}
+
+.theme-footer .theme-switch {
+    width: auto;
+    margin-bottom: 0;
+    padding: 0 var(--space-lg) 0 0;
+    border: none;
+    background-color: transparent;
+    background-position: right 0 center;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.theme-footer .theme-switch:hover,
+.theme-footer .theme-switch:focus {
+    color: var(--color-text-primary);
 }
