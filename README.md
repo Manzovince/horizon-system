@@ -1,1 +1,1 @@
-# horizon-system
+# Horizon system
