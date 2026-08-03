@@ -15,8 +15,7 @@ body {
 
 body>main {
     max-width: none;
-    padding-block: var(--space-xs) var(--space-sm);
-    padding-inline: var(--space-sm);
+    padding: var(--space-sm);
     padding-bottom: 0;
     flex: 1 1 auto;
     display: flex;
@@ -289,18 +288,22 @@ body>main {
     opacity: 1;
 }
 
-.theme-footer .theme-switch {
-    width: auto;
-    margin-bottom: 0;
-    padding: 0 var(--space-lg) 0 0;
-    border: none;
-    background-color: transparent;
-    background-position: right 0 center;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
+.theme-picker {
+    display: flex;
+    gap: var(--space-xs);
 }
 
-.theme-footer .theme-switch:hover,
-.theme-footer .theme-switch:focus {
+.theme-option {
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.theme-option:hover,
+.theme-option:focus-visible {
     color: var(--color-text-primary);
+}
+
+.theme-option.active {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-3);
 }
