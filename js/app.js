@@ -44,13 +44,13 @@ const formatDateISO = (date) =>
 const getHorizonLine = (column, date) => {
     switch (column) {
         case "today":
-            return `D ${formatDateYMD(date)}`;
+            return `D${formatDateYMD(date)}`;
         case "week":
             return `W${pad2(getISOWeek(date))}`;
         case "month":
-            return `M ${pad2(date.getMonth() + 1)}`;
+            return `M${pad2(date.getMonth() + 1)}`;
         case "year":
-            return `Y ${date.getFullYear()}`;
+            return `Y${date.getFullYear()}`;
         default:
             return "S";
     }
