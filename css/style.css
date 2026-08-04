@@ -55,6 +55,16 @@ body>main {
     flex: 0 0 auto;
 }
 
+.toolbar-actions {
+    display: flex;
+    gap: var(--space-2xs);
+}
+
+#ai-toggle.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 /* ── Board ───────────────────────────────────────────────────────────── */
 .board {
     display: grid;
@@ -140,8 +150,7 @@ body>main {
     font-size: var(--font-size-sm);
 }
 
-/* Colonne vide : le bouton d'ajout remonte juste sous le header,
-   et le reste de la zone (vide) devient un grand raccourci cliquable. */
+/* Colonne vide : le bouton d'ajout remonte juste sous le header. */
 .column:has(.task-list:empty) .column-add {
     order: 0;
     flex: 0 0 auto;
@@ -150,7 +159,6 @@ body>main {
 .column:has(.task-list:empty) .task-list {
     order: 1;
     flex: 1 1 auto;
-    cursor: pointer;
 }
 
 /* ── Liste de tâches ─────────────────────────────────────────────────── */
@@ -280,6 +288,21 @@ body>main {
 
 .theme-footer:hover {
     opacity: 1;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+#ai-key-btn {
+    min-height: auto;
+    padding: 0;
+    font-size: inherit;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: var(--font-weight-regular);
 }
 
 .theme-picker {

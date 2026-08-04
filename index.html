@@ -32,10 +32,16 @@
                     <option value="someday">Someday</option>
                 </select>
             </div>
-            <button type="submit" class="icon-start">
-                <iconify-icon icon="mdi:plus"></iconify-icon>
-                Ajouter
-            </button>
+            <div class="toolbar-actions">
+                <button type="submit" class="icon-start">
+                    <iconify-icon icon="mdi:plus"></iconify-icon>
+                    Ajouter
+                </button>
+                <button type="button" id="ai-toggle" class="btn icon flat" aria-pressed="false"
+                    aria-label="Générer un plan IA à la création">
+                    <iconify-icon icon="mdi:robot-off-outline"></iconify-icon>
+                </button>
+            </div>
         </form>
 
         <div class="board">
@@ -46,7 +52,7 @@
                 </header>
                 <ul class="task-list" data-list="today"></ul>
                 <div class="column-add">
-                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <button type="button" class="btn flat column-add-btn">+ Nouvelle tâche</button>
                     <form class="column-add-form" hidden>
                         <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
                     </form>
@@ -60,7 +66,7 @@
                 </header>
                 <ul class="task-list" data-list="week"></ul>
                 <div class="column-add">
-                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <button type="button" class="btn flat column-add-btn">+ Nouvelle tâche</button>
                     <form class="column-add-form" hidden>
                         <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
                     </form>
@@ -74,7 +80,7 @@
                 </header>
                 <ul class="task-list" data-list="month"></ul>
                 <div class="column-add">
-                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <button type="button" class="btn flat column-add-btn">+ Nouvelle tâche</button>
                     <form class="column-add-form" hidden>
                         <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
                     </form>
@@ -88,7 +94,7 @@
                 </header>
                 <ul class="task-list" data-list="year"></ul>
                 <div class="column-add">
-                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <button type="button" class="btn flat column-add-btn">+ Nouvelle tâche</button>
                     <form class="column-add-form" hidden>
                         <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
                     </form>
@@ -101,7 +107,7 @@
                 </header>
                 <ul class="task-list" data-list="someday"></ul>
                 <div class="column-add">
-                    <button type="button" class="btn flat sm column-add-btn">+ Nouvelle tâche</button>
+                    <button type="button" class="btn flat column-add-btn">+ Nouvelle tâche</button>
                     <form class="column-add-form" hidden>
                         <input type="text" class="column-add-input" placeholder="Nouvelle tâche…" autocomplete="off">
                     </form>
@@ -111,7 +117,10 @@
     </main>
 
     <footer class="theme-footer">
-        <span>&copy; Horizon system</span>
+        <div class="footer-left">
+            <span>&copy; Horizon system</span>
+            <button type="button" id="ai-key-btn" class="btn flat sm">Clé IA</button>
+        </div>
         <div class="theme-picker" role="group" aria-label="Thème">
             <span class="theme-option" role="button" tabindex="0" data-theme="light-theme">Light</span>
             <span class="theme-option" role="button" tabindex="0" data-theme="dark-theme">Dark</span>

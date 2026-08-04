@@ -60,14 +60,16 @@ const addTask = (text, column) => {
     const now = new Date();
     const meta = `created: ${formatDateISO(now)}\nhorizon: ${getHorizonLine(column, now)}`;
 
-    tasks.push({
+    const task = {
         id: crypto.randomUUID(),
         column,
         done: false,
         content: `# ${text}\n\n${meta}`,
-    });
+    };
+    tasks.push(task);
     saveTasks(tasks);
     render();
+    return task.id;
 };
 
 const extractTitle = (content) => {
@@ -192,15 +194,141 @@ const updateDateMeta = () => {
 updateDateMeta();
 setInterval(updateDateMeta, 30000);
 
-form.addEventListener("submit", (e) => {
+/* ── Plan IA ─────────────────────────────────────────────────────────── */
+const AI_KEY_STORAGE = "horizon-ai-key";
+const AI_MODEL = "claude-haiku-4-5-20251001";
+
+const FR_MONTHS = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+];
+const FR_DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+
+const getAiKey = () => localStorage.getItem(AI_KEY_STORAGE);
+
+const promptAiKey = () => {
+    const key = window.prompt("Clé API Anthropic (stockée en local dans ce navigateur) :", getAiKey() || "");
+    if (key === null) return;
+    if (key.trim()) localStorage.setItem(AI_KEY_STORAGE, key.trim());
+    else localStorage.removeItem(AI_KEY_STORAGE);
+};
+
+const getRemainingPeriods = (column, date) => {
+    switch (column) {
+        case "year": {
+            const months = [];
+            for (let m = date.getMonth(); m <= 11; m++) months.push(FR_MONTHS[m]);
+            return months;
+        }
+        case "month": {
+            const weeks = [];
+            const monthIdx = date.getMonth();
+            const cursor = new Date(date);
+            while (cursor.getMonth() === monthIdx) {
+                weeks.push(`Semaine du ${pad2(cursor.getDate())}/${pad2(monthIdx + 1)}`);
+                cursor.setDate(cursor.getDate() + 7);
+            }
+            return weeks;
+        }
+        case "week": {
+            const days = [];
+            const dow = (date.getDay() + 6) % 7;
+            for (let i = dow; i <= 6; i++) days.push(FR_DAYS[i]);
+            return days;
+        }
+        default:
+            return null;
+    }
+};
+
+const buildAiPrompt = (title, column, date) => {
+    const periods = getRemainingPeriods(column, date);
+    if (periods && periods.length) {
+        return `Tâche : "${title}". Génère une liste markdown de checkboxes, une ligne par élément suivant, ` +
+            `format "- [ ] Nom - thématique courte (2-5 mots)" :\n${periods.join("\n")}\n` +
+            `Réponds uniquement avec la liste, sans texte avant/après.`;
+    }
+    return `Tâche : "${title}". Génère une courte liste markdown de checkboxes (3 à 6 étapes) pour accomplir ` +
+        `cette tâche, format "- [ ] étape". Réponds uniquement avec la liste, sans texte avant/après.`;
+};
+
+const generateAiPlan = async (title, column, date) => {
+    const apiKey = getAiKey();
+    if (!apiKey) throw new Error("Aucune clé API IA renseignée.");
+
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true",
+        },
+        body: JSON.stringify({
+            model: AI_MODEL,
+            max_tokens: 512,
+            messages: [{ role: "user", content: buildAiPrompt(title, column, date) }],
+        }),
+    });
+
+    if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Requête IA échouée (${res.status}) : ${errText}`);
+    }
+
+    const data = await res.json();
+    return (data.content?.[0]?.text ?? "").trim();
+};
+
+const appendAiPlan = async (id, column) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+
+    aiToggle.classList.add("loading");
+    try {
+        const plan = await generateAiPlan(extractTitle(task.content), column, new Date());
+        if (plan) {
+            task.content = `${task.content}\n\n${plan}`;
+            saveTasks(tasks);
+            expandedIds.add(id);
+            render();
+        }
+    } catch (err) {
+        window.alert(err.message);
+    } finally {
+        aiToggle.classList.remove("loading");
+    }
+};
+
+const aiToggle = document.getElementById("ai-toggle");
+let aiEnabled = false;
+
+aiToggle.addEventListener("click", () => {
+    aiEnabled = !aiEnabled;
+    aiToggle.setAttribute("aria-pressed", String(aiEnabled));
+    aiToggle.querySelector("iconify-icon").setAttribute(
+        "icon",
+        aiEnabled ? "mdi:robot-outline" : "mdi:robot-off-outline"
+    );
+});
+
+document.getElementById("ai-key-btn").addEventListener("click", promptAiKey);
+
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = input.value.trim();
     if (!text) return;
 
-    addTask(text, columnSelect.value);
+    const column = columnSelect.value;
+    const id = addTask(text, column);
 
     input.value = "";
     input.focus();
+
+    if (aiEnabled) {
+        if (!getAiKey()) promptAiKey();
+        if (getAiKey()) await appendAiPlan(id, column);
+    }
 });
 
 const openColumnAdd = (wrapper) => {
@@ -213,15 +341,9 @@ const openColumnAdd = (wrapper) => {
 };
 
 document.querySelector(".board").addEventListener("click", (e) => {
-    const addWrapper = e.target.closest(".column-add");
-    if (addWrapper) {
-        openColumnAdd(addWrapper);
-        return;
-    }
-
-    const emptyList = e.target.closest(".task-list");
-    if (emptyList && emptyList.children.length === 0) {
-        openColumnAdd(emptyList.closest(".column").querySelector(".column-add"));
+    const addBtn = e.target.closest(".column-add-btn");
+    if (addBtn) {
+        openColumnAdd(addBtn.closest(".column-add"));
         return;
     }
 
