@@ -33,12 +33,38 @@ const saveTasks = (tasks) => {
 
 let tasks = loadTasks();
 
+const pad2 = (n) => String(n).padStart(2, "0");
+
+const formatDateYMD = (date) =>
+    `${date.getFullYear()}${pad2(date.getMonth() + 1)}${pad2(date.getDate())}`;
+
+const formatDateISO = (date) =>
+    `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+
+const getHorizonLine = (column, date) => {
+    switch (column) {
+        case "today":
+            return `D ${formatDateYMD(date)}`;
+        case "week":
+            return `W${pad2(getISOWeek(date))}`;
+        case "month":
+            return `M ${pad2(date.getMonth() + 1)}`;
+        case "year":
+            return `Y ${date.getFullYear()}`;
+        default:
+            return "S";
+    }
+};
+
 const addTask = (text, column) => {
+    const now = new Date();
+    const meta = `created: ${formatDateISO(now)}\nhorizon: ${getHorizonLine(column, now)}`;
+
     tasks.push({
         id: crypto.randomUUID(),
         column,
         done: false,
-        content: `# ${text}`,
+        content: `# ${text}\n\n${meta}`,
     });
     saveTasks(tasks);
     render();
@@ -95,13 +121,6 @@ const createTaskElement = (task) => {
     row.append(checkbox, label);
 
     const body = extractBody(task.content);
-
-    if (body.trim()) {
-        const noteIcon = document.createElement("iconify-icon");
-        noteIcon.className = "task-note-indicator";
-        noteIcon.setAttribute("icon", "mdi:text-box-outline");
-        row.append(noteIcon);
-    }
 
     row.append(deleteBtn);
     li.append(row);

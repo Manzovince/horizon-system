@@ -170,7 +170,7 @@ body>main {
     display: flex;
     flex-direction: column;
     gap: var(--space-2xs);
-    padding: var(--space-2xs) var(--space-xs);
+    padding: var(--space-xs);
     margin-bottom: 0;
     background-color: var(--color-surface-2);
     border: var(--border-width) solid var(--color-border-subtle);
@@ -183,7 +183,7 @@ body>main {
 .task-row {
     display: flex;
     align-items: center;
-    gap: var(--space-2xs);
+    gap: var(--space-xs);
     cursor: pointer;
 }
 
@@ -202,12 +202,6 @@ body>main {
 .task.done .task-row span {
     color: var(--color-text-disabled);
     text-decoration: line-through;
-}
-
-.task-note-indicator {
-    flex: 0 0 auto;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
 }
 
 .task .btn.icon {
